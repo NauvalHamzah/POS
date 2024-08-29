@@ -1,0 +1,15 @@
+.with-arrow::after {
+    content: "\f078"; /* Unicode for chevron down icon */
+    font-family: 'Font Awesome 5 Free'; /* Ensure FontAwesome font family is used */
+    font-weight: 900; /* Ensure font-weight matches icon style */
+    float: right; /* Positions the arrow on the right */
+    transition: transform 0.3s ease; /* Smooth rotation */
+}
+
+.with-arrow.collapsed::after {
+    transform: rotate(-90deg); /* Rotates the arrow to the right when collapsed */
+}
+
+.with-arrow.hide-arrow::after {
+    opacity: 0; /* Hides the arrow */
+}
