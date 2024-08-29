@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+    <div class="card">
+        <div class="card-header">
+            <h2 style="text-align: center" class="mb-4">
+                <%= heading %>
+            </h2>
+        </div>
+        <div class="card-body">
+        <form action="" method="post" id="myForm">
+            <div class="form-group row mb-2">
+                <label for="title" class="col-sm-2 col-form-label">Title</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="title" name="title" value="<%= item.title %>"
+                        placeholder="insert your title" required>
+                </div>
+            </div>
+            <% if(heading==='Update Data' ){ %>
+                <div class="form-group row mb-2">
+                    <label for="deadline" class="col-sm-2 col-form-label">Deadline</label>
+                    <div class="col-sm-10">
+                        <input type="datetime-local" class="form-control" id="deadline" name="deadline"
+                            value="<%= item.deadline %>">
+                    </div>
+                </div>
+                <div class="form-group row mb-2">
+                    <label class="col-sm-2 col-form-label">Complete</label>
+                    <div class="form-check col-sm-10">
+                        <input class="form-check-input" type="checkbox" id="complete" name="complete" value="true"
+                          style="margin-left: -10px;"  <%=item.complete ? 'checked' : '' %>>
+                        <label class="form-check-label" for="complete">
+                            done
+                        </label>
+                    </div>
+                </div>
+
+                <br>
+                <% } %>
+        </div>
+                    <div class="card-footer mb-2">
+                        <button class="btn btn-primary px-4" type="submit"><i
+                                class="fa-solid fa-floppy-disk"></i></button>
+                        <a class="btn btn-warning px-4" href="/todo" type="button"><i
+                                class="fa-solid fa-rotate-left"></i></a>
+                    </div>
+        </form>
+    </div>
+    <%- include('../partials/footer') %>
