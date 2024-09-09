@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+<%- include('../partials/topbar') %>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">User</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary"><%= formHeading%></h6>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" id="userForm">
+                    <div class="form-group row mb-2">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" name="email" value="<%= item.email? item.email : '' %>">
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" value="<%= item.name? item.name : '' %>" >
+                        </div>
+                    </div>
+                    <% if (!item.password) { %>
+                        <div class="form-group row mb-2">
+                            <label for="password" class="col-sm-2 col-form-label">Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="password" name="password">
+                            </div>
+                        </div>
+                    <% } %>                    
+                    <div class="form-group row mb-2">
+                        <label class="col-sm-2 col-form-label">Role</label>
+                        <div class="col-sm-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="role" id="operator" value="Operator" <%= item.role !== 'Admin' ? 'checked' : '' %>>
+                                <label class="form-check-label" for="operator">Operator</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="role" id="admin" value="Admin" <%= item.role === 'Admin' ? 'checked' : '' %> >
+                                <label class="form-check-label" for="admin">Admin</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer py-3">
+                <button type="submit" form="userForm" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-database"></i>
+                    </span>
+                    <span class="text">
+                        Save
+                    </span>
+                </button>
+                <a href="/users" class="btn btn-warning btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </span>
+                    <span class="text">
+                        Back
+                    </span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+    <%- include('../partials/footer') %>

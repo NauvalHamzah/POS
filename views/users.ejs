@@ -1,49 +1,103 @@
 <%- include('./partials/header') %>
-    <!-- Begin Page Content -->
-    <div class="container-fluid">
+    <%- include('./partials/sidebar') %>
+        <%- include('./partials/topbar') %>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
 
-        <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">User</h1>
-        <p class="mb-4">This is the list of users</p>
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">User</h1>
+                <p class="mb-4">This is the list of users</p>
 
-        <!-- DataTales Example -->
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-primary">User List</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% userData.forEach((item, index)=> { %>
-                                <tr>
-                                    <td>
-                                        <%= index + 1 %>
-                                    </td>
-                                    <td>
-                                        <%= item.name %>
-                                    </td>
-                                    <td>
-                                        <%= item.email %>
-                                    </td>
-                                    <td>
-                                        <%= item.role %>
-                                    </td>
-                            <% }) %>
-                        </tbody>
-                    </table>
+                <!-- DataTales Example -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <a href="/users/add" class="btn btn-primary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            <span class="text">Add</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Userid</th>
+                                        <th>Email</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Userid</th>
+                                        <th>Email</th>
+                                        <th>Name</th>
+                                        <th>Role</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-    </div>
-    <!-- /.container-fluid -->
-    <%- include('./partials/footer') %>
+            </div>
+
+            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+            <script>
+                $(document).ready(function () {
+                    $('#dataTable').DataTable({
+                        "lengthMenu": [[3, 10, 100], [3, 10, 100]],
+                        "processing": true,
+                        "serverSide": true,
+                        "ajax": "/usersapi",
+                        "columns": [
+                            { "data": "userid" },
+                            { "data": "email" },
+                            { "data": "name" },
+                            { "data": "role" },
+                            {
+                                "data": null,
+                                "render": renderActionColumn,
+                                "orderable": false
+                            }
+                        ]
+                    });
+                });
+
+                function renderActionColumn(data, type, row) {
+                    return `
+                <a href="/users/edit/${data.userid}" class="btn btn-success btn-circle">
+                    <i class="fa-solid fa-circle-info"></i>
+                </a>
+                <a href="#" class="btn btn-danger btn-circle"
+                data-bs-toggle="modal" data-bs-target="#deleteUserModal-${data.userid}">
+                    <i class="fas fa-trash"></i>
+                </a>
+
+                <!-- Delete User Modal-->
+                <div class="modal fade" id="deleteUserModal-${data.userid}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                <button type="button" class="btn-close" style="font-size: 1.5rem; background: none; border: none;"
+                                    data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                            </div>
+                            <div class="modal-body">Are you sure you want delete it?</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
+                                <a class="btn btn-primary" href="/users/delete/${data.userid}">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                }
+            </script>
+            <!-- /.container-fluid -->
+            <%- include('./partials/footer') %>

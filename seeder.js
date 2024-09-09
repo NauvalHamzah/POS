@@ -12,7 +12,7 @@ for (let i = 0; i < 50; i++) {
         role: "Admin"
     };
     if(i>24){
-        data[i].role = "Guest"
+        data[i].role = "Operator"
     }
     const hash = bcrypt.hashSync(data[i].password, saltRounds)
     data[i].password = hash
