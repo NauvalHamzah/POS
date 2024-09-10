@@ -24,11 +24,11 @@ app.use(flash())
 
 var indexRouter = require('./routes/indexRoutes');
 var usersRouter = require('./routes/userRoutes');
-var usersapiRouter = require('./routes/usersapi');
+var unitsRouter = require('./routes/unitsRoutes');
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/usersapi', usersapiRouter);
+app.use('/units', unitsRouter);
 
 app.listen(3000, function () {
     console.log('server berjalan di port 3000')

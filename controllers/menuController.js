@@ -1,5 +1,3 @@
-const User = require('../models/UserModel')
-
 function dashboard(req, res) {
     res.render('dashboard', {
         activeRoute: 'dashboard',
@@ -9,31 +7,23 @@ function dashboard(req, res) {
     })
 }
 
-function goodsUtil1(req, res) {
-    res.render('goodsUtil1', {
+function goods(req, res) {
+    res.render('goods', {
         activeRoute: 'goodsUtility',
-        title: 'POS - Good Utility',
-        activeUtil: 'util1',
+        title: 'POS - Goods',
+        activeUtil: 'goods',
         user: req.session.user
     })
 }
 
-function goodsUtil2(req, res) {
-    res.render('goodsUtil2', {
+function units(req, res) {
+    res.render('units', {
         activeRoute: 'goodsUtility',
-        title: 'POS - Good Utility',
-        activeUtil: 'util2',
+        title: 'POS - Units',
+        activeUtil: 'units',
         user: req.session.user
     })
-}
 
-function goodsUtil3(req, res) {
-    res.render('goodsUtil3', {
-        activeRoute: 'goodsUtility',
-        title: 'POS - Good Utility',
-        activeUtil: 'util3',
-        user: req.session.user
-    })
 }
 
 function suppliers(req, res) {
@@ -54,14 +44,11 @@ function customers(req, res) {
 }
 
 function users(req, res) {
-    User.getAllUser(function (userData) {
-        res.render('users', {
-            userData,
-            activeRoute: 'users',
-            title: 'POS - Users',
-            activeUtil: '',
-            user: req.session.user
-        })
+    res.render('users', {
+        activeRoute: 'users',
+        title: 'POS - Users',
+        activeUtil: '',
+        user: req.session.user
     })
 }
 
@@ -83,4 +70,4 @@ function sales(req, res) {
     })
 }
 
-module.exports = { dashboard, goodsUtil1, goodsUtil2, goodsUtil3, suppliers, customers, users, purchases, sales }
+module.exports = { dashboard, goods, units, suppliers, customers, users, purchases, sales }
