@@ -23,6 +23,19 @@ class Unit {
         })
     }
 
+    static async getUnitOnly(){
+        return new Promise((resolve, reject)=>{
+            const sql = `SELECT unit from units`
+            db.query(sql,(err,result)=>{
+                if (err){
+                    console.log(err)
+                    return reject(err)
+                }
+                resolve(result.rows)
+            })
+        })
+    }
+
     static getEdit(index, callback){
         db.query('SELECT * FROM units WHERE unit=$1', [index], function (err, data) {
             if (err) { console.log(err) }

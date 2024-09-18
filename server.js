@@ -9,7 +9,7 @@ var flash = require('connect-flash');
 app.set('view engine', 'ejs')
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // parse application/json
 app.use(express.json());
@@ -23,12 +23,17 @@ app.use(session({
 app.use(flash())
 
 var indexRouter = require('./routes/indexRoutes');
-var usersRouter = require('./routes/userRoutes');
+var apiRouter = require('./routes/apiRoutes');
+var goodsRouter = require('./routes/goodsRoutes');
 var unitsRouter = require('./routes/unitsRoutes');
+var usersRouter = require('./routes/userRoutes');
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api', apiRouter);
+app.use('/goods', goodsRouter);
 app.use('/units', unitsRouter);
+app.use('/users', usersRouter);
+
 
 app.listen(3000, function () {
     console.log('server berjalan di port 3000')

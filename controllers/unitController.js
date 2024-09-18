@@ -44,7 +44,7 @@ function addUnit(req, res) {
 }
 
 function saveUnit(req, res) {
-    const { unit, name, note, } = req.body
+    const { unit, name, note } = req.body
     Unit.addUnit(unit, name, note, function () {
         res.redirect('/units')
     })
