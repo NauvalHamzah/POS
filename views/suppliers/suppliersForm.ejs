@@ -1,0 +1,59 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+<%- include('../partials/topbar') %>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">User</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary"><%= formHeading%></h6>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" id="supplierForm">
+                    <div class="form-group row mb-2">
+                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" value="<%= item.name? item.name : '' %>" >
+                        </div>
+                    </div>                  
+                    <div class="form-group row mb-2">
+                        <label for="name" class="col-sm-2 col-form-label">Address</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="address" name="address"><%= item.address? item.address : '' %></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="name" class="col-sm-2 col-form-label">Phone</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="phone" name="phone" value="<%= item.phone? item.phone : '' %>" >
+                        </div>
+                    </div>    
+                </form>
+            </div>
+            <div class="card-footer py-3">
+                <button type="submit" form="supplierForm" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-database"></i>
+                    </span>
+                    <span class="text">
+                        Save
+                    </span>
+                </button>
+                <a href="/suppliers" class="btn btn-warning btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </span>
+                    <span class="text">
+                        Back
+                    </span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+    <%- include('../partials/footer') %>

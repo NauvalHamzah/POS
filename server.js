@@ -26,12 +26,14 @@ var indexRouter = require('./routes/indexRoutes');
 var apiRouter = require('./routes/apiRoutes');
 var goodsRouter = require('./routes/goodsRoutes');
 var unitsRouter = require('./routes/unitsRoutes');
+var supplierRouter = require('./routes/supplierRoutes');
 var usersRouter = require('./routes/userRoutes');
 
 app.use('/', indexRouter);
 app.use('/api', apiRouter);
 app.use('/goods', goodsRouter);
 app.use('/units', unitsRouter);
+app.use('/suppliers', supplierRouter);
 app.use('/users', usersRouter);
 
 
