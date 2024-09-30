@@ -82,6 +82,19 @@ class Goods {
         })
     }
 
+    static async getGoods(){
+        return new Promise((resolve, reject)=>{
+            const sql = `SELECT * from goods ORDER BY barcode ASC`
+            db.query(sql,(err,result)=>{
+                if (err){
+                    console.log(err)
+                    return reject(err)
+                }
+                resolve(result.rows)
+            })
+        })
+    }
+
 }
 
 module.exports = Goods

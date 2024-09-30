@@ -1,0 +1,305 @@
+<%- include('../partials/header') %>
+    <%- include('../partials/sidebar') %>
+        <%- include('../partials/topbar') %>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">Purchases</h1>
+
+                <!-- Purchases Data -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h3 class="m-0 font-weight-bold">Transaction</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post" id="purchaseForm">
+                            <div class="form-group row mb-4">
+                                <div class="form-group col-md-4">
+                                    <label for="invoice">Invoice</label>
+                                    <input type="text" class="form-control" id="invoice" name="invoice"
+                                        value="<%= item.invoice %>" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="time">Time</label>
+                                    <input type="text" class="form-control" id="time" name="time" value="<%= time %>"
+                                        readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="operator">Operator</label>
+                                    <input type="hidden" class="form-control" id="operatorid" name="operatorid"
+                                        value="<%= user.id %>">
+                                    <input type="text" class="form-control" id="operator" name="operator"
+                                        value="<%= user.name %>" readonly>
+                                </div>
+                            </div>
+                            <hr style="border-top: 1px solid #a0a0a0;" class="mb-5">
+                            <div class="form-group row mb-2">
+                                <div class="form-group col-md-4">
+                                    <label for="barcode">Goods Barcode</label>
+                                    <select class="form-control" id="barcode" name="barcode">
+                                        <% goods.forEach(function(barc, index) { %>
+                                            <option value="<%= barc.barcode %>" data-name="<%= barc.name %>"
+                                                data-stock="<%= barc.stock %>"
+                                                data-purchaseprice="<%= barc.purchaseprice %>">
+                                                <%= barc.barcode+' - '+barc.name %>
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="goodsName">Goods Name</label>
+                                    <input type="text" class="form-control" id="goodsName" name="goodsName" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="stock">Stock</label>
+                                    <input type="text" class="form-control" id="stock" name="stock" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group row mb-2">
+                                <div class="form-group col-md-4">
+                                    <label for="purchasePrice">Purchase Price</label>
+                                    <input type="text" class="form-control" id="purchasePrice" name="purchasePrice" readonly>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="qty">Qty</label>
+                                    <input type="number" class="form-control" id="qty" name="qty" step="1" min="0">
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label for="totalPrice">Total Price</label>
+                                    <input type="text" class="form-control" id="totalPrice" name="totalPrice" readonly>
+                                </div>
+                            </div>
+                        <a href="#" id="addPurchaseItem" class="btn btn-primary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            <span class="text">Add</span>
+                        </a>
+                        <hr style="border-top: 1px solid #a0a0a0;" class="mt-5">
+                        <div class="table-responsive">
+                            <table class="table table-striped" id="purchasedItemTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Barcode</th>
+                                        <th>Name</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Total Price</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="purchasedItemsTableBody">
+                                    <!--Use script to fill table body-->
+                                </tbody>
+                            </table>
+                        </div>
+                    
+                    <div class="card-footer py-3">
+                        <div class="form-group row mb-3">
+                            <label for="totalSummary" class="col-sm-2 col-form-label">Total Summary</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" id="totalSummaryActual" name="totalSummaryActual">
+                                <input type="text" class="form-control" id="totalSummaryDisplay" name="totalSummaryDisplay" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                            <label for="supplier" class="col-sm-2 col-form-label">Supplier</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="supplier" name="supplier">
+                                    <% suppliers.forEach(function(supplier, index) { %>
+                                        <option value="<%= supplier.supplierid %>" >
+                                            <%= supplier.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" form="purchaseForm" class="btn btn-success btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            <span class="text">
+                                Finish
+                            </span>
+                        </button>
+                        <a href="/purchases" class="btn btn-warning btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </span>
+                            <span class="text">
+                                Back
+                            </span>
+                        </a>
+                    </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <script>
+                //Initialization
+                $(document).ready(function () {
+                    const invoiceId = '<%= item.invoice %>'
+                    const supplierId = '<%= item.supplier %>'
+                    fetchPurchasedItems(invoiceId);
+                    $('#supplier').val(supplierId);
+                })
+
+                //Update table content
+                function fetchPurchasedItems(invoiceId) {
+                    $.get(`/purchases/showPurchaseItem/${invoiceId}`, function(data) {
+                        const purchasedItems = data;
+                        console.log(data)
+                        purchasedItemsTable(purchasedItems);  
+                        updateTotalSummary(purchasedItems);  
+                    })
+                    .fail(function(err) {
+                        console.log('Error fetching purchased items:', err);
+                    });
+                }
+
+                //Goods Selection
+                $('#barcode').on('change', function () {
+                    const selectedOption = $(this).find('option:selected');
+                    const goodsName = selectedOption.data('name'); 
+                    const stock = selectedOption.data('stock'); 
+                    const purchasePrice = selectedOption.data('purchaseprice'); 
+                    const totalPrice = formatCurrency($('#qty').val() * purchasePrice);
+
+                    $('#goodsName').val(goodsName); $('#stock').val(stock);
+                    $('#purchasePrice').val(purchasePrice);
+                    $('#totalPrice').val(totalPrice)
+                }); 
+                    
+                //Quantity input
+                $('#qty').on('input change',
+                    function () {
+                        const
+                        purchasePrice = $('#barcode').find('option:selected').data('purchaseprice');
+                        const totalPrice = formatCurrency($(this).val() * purchasePrice);
+                        $('#totalPrice').val(totalPrice);
+                    });
+                
+
+                    $('#addPurchaseItem').on('click', function (e) {
+                        e.preventDefault(); 
+                        const invoice = $('#invoice').val(); 
+                        const barcode = $('#barcode').val(); 
+                        const qty = $('#qty').val(); 
+                        const purchasePrice = $('#purchasePrice').val(); 
+                        const data = {
+                                    invoice: invoice, 
+                                    barcode: barcode, 
+                                    qty: qty, 
+                                    purchasePrice: purchasePrice
+                                };
+                        $.ajax({
+                            url: '/purchases/addPurchaseItem', 
+                            type: 'POST', 
+                            data: JSON.stringify(data), 
+                            contentType: 'application/json', 
+                            success:
+                                function (response) {
+                                    if (response.success) {
+                                        purchasedItemsTable(response.purchasedItems);
+                                        updateTotalSummary(response.purchasedItems);
+                                        $('#qty').val('');
+                                        $('#barcode').prop('selectedIndex', 0).trigger('change');
+                                    } else {
+                                        console.log('Failed to add item:', response.message);
+                                    }
+                                }, 
+                            error:
+                                function (error) { console.log(error); }
+                        });
+                    });
+                
+                function purchasedItemsTable(purchasedItems) {
+                    $('#purchasedItemsTableBody').empty(); purchasedItems.forEach((item,index) => {
+                        const formattedPurchasePrice = formatCurrency(item.purchaseprice);
+                        const formattedTotalPrice = formatCurrency(item.totalprice);
+
+                        $('#purchasedItemsTableBody').append(`
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.barcode}</td>
+                                <td>${item.name}</td>
+                                <td>${item.quantity}</td>
+                                <td>${formattedPurchasePrice}</td>
+                                <td>${formattedTotalPrice}</td>
+                                <td>${deleteButton(item.id)}</td>
+                            </tr>
+                        `);
+                    });
+                }
+
+                function updateTotalSummary(purchasedItems) {
+                    const totalSummary = purchasedItems.reduce((sum, item) => sum +
+                        parseFloat(item.totalprice), 0);
+                    $('#totalSummaryActual').val((totalSummary));
+                    $('#totalSummaryDisplay').val(formatCurrency(totalSummary));
+                }
+
+                function formatCurrency(amount) {
+                    let newFormat = '';
+                    if (amount) {
+                        newFormat = 'IDR ' + parseFloat(amount).toLocaleString('id-ID', {
+                            minimumFractionDigits: 2, maximumFractionDigits: 2
+                        });
+                    }
+                    return newFormat
+                }
+
+                function deleteButton(id){
+                    return `
+                <a href="#" class="btn btn-danger btn-circle"
+                data-bs-toggle="modal" data-bs-target="#deletePurchaseItemModal-${id}">
+                    <i class="fas fa-trash"></i>
+                </a>
+
+                <!-- Delete Purchase Item Modal-->
+                <div class="modal fade" id="deletePurchaseItemModal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                <button type="button" class="btn-close" style="font-size: 1.5rem; background: none; border: none;"
+                                    data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                            </div>
+                            <div class="modal-body">Are you sure you want delete it?</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
+                                <a class="btn btn-primary" onclick="removePurchaseItem('${id}')">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                }
+
+                function removePurchaseItem(id) {
+                    $.ajax({
+                        url: `/purchases/item/delete/${id}`, 
+                        type: 'GET', 
+                        success: function() {
+                            const modalElement = $(`#deletePurchaseItemModal-${id}`);
+                            const modalInstance = bootstrap.Modal.getInstance(modalElement[0]);
+                            modalInstance.hide();
+                            
+                            const invoiceId = '<%= item.invoice %>'
+                            fetchPurchasedItems(invoiceId);
+                            
+                        },
+                        error: function(err) {
+                            console.log('Error:', err); 
+                        }
+                    });
+                }
+
+            </script>
+
+<!-- /.container-fluid -->
+<%- include('../partials/footer') %>

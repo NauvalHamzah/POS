@@ -78,6 +78,19 @@ class Supplier {
         })
     }
 
+    static async getSuppliers(){
+        return new Promise((resolve, reject)=>{
+            const sql = `SELECT * from suppliers ORDER BY supplierid ASC`
+            db.query(sql,(err,result)=>{
+                if (err){
+                    console.log(err)
+                    return reject(err)
+                }
+                resolve(result.rows)
+            })
+        })
+    }
+
 }
 
 module.exports = Supplier
