@@ -1,32 +1,110 @@
 <%- include('./partials/header') %>
-<%- include('./partials/sidebar') %>
-<%- include('./partials/topbar') %>
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
+    <%- include('./partials/sidebar') %>
+        <%- include('./partials/topbar') %>
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
 
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Customers</h1>
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-                        <p>This is data of Customers </p>
-                    </div>
-
-                    <!-- Content Row -->
-
-                    <div class="row">
-
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-
-                    </div>
-
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Customers</h1>
                 </div>
-                <!-- /.container-fluid -->
-<%- include('./partials/footer') %>
 
-            
+                <!-- Content Row -->
+                <div class="row">
+                    <p>This is data of Customers </p>
+                </div>
+
+                <!-- Data of Customers -->
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <a href="/customers/add" class="btn btn-primary btn-icon-split">
+                            <span class="icon text-white-50">
+                                <i class="fa-solid fa-plus"></i>
+                            </span>
+                            <span class="text">Add</span>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="customersTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+            <script>
+                $(document).ready(function () {
+                    $('#customersTable').DataTable({
+                        "lengthMenu": [[3, 10, 100], [3, 10, 100]],
+                        "processing": true,
+                        "serverSide": true,
+                        "ajax": "/api/customers",
+                        "columns": [
+                            { "data": "customerid" },
+                            { "data": "name" },
+                            { "data": "address" },
+                            { "data": "phone" },
+                            {
+                                "data": null,
+                                "render": renderActionColumn,
+                                "orderable": false
+                            }
+                        ]
+                    });
+                });
+
+                function renderActionColumn(data, type, row) {
+                    return `
+                <a href="/customers/edit/${data.customerid}" class="btn btn-success btn-circle">
+                    <i class="fa-solid fa-circle-info"></i>
+                </a>
+                <a href="#" class="btn btn-danger btn-circle"
+                data-bs-toggle="modal" data-bs-target="#deleteCustomerModal-${data.customerid}">
+                    <i class="fas fa-trash"></i>
+                </a>
+
+                <!-- Delete User Modal-->
+                <div class="modal fade" id="deleteCustomerModal-${data.customerid}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Confirmation</h5>
+                                <button type="button" class="btn-close" style="font-size: 1.5rem; background: none; border: none;"
+                                    data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                            </div>
+                            <div class="modal-body">Are you sure you want delete it?</div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
+                                <a class="btn btn-primary" href="/customers/delete/${data.customerid}">Yes</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+                }
+            </script>
+
+            <!-- /.container-fluid -->
+            <%- include('./partials/footer') %>

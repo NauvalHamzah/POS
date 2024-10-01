@@ -27,6 +27,7 @@ var apiRouter = require('./routes/apiRoutes');
 var goodsRouter = require('./routes/goodsRoutes');
 var unitsRouter = require('./routes/unitsRoutes');
 var supplierRouter = require('./routes/supplierRoutes');
+var customerRouter = require('./routes/customerRoutes');
 var usersRouter = require('./routes/userRoutes');
 var purchasesRouter = require('./routes/purchasesRoutes');
 
@@ -36,6 +37,7 @@ app.use('/api', apiRouter);
 app.use('/goods', goodsRouter);
 app.use('/units', unitsRouter);
 app.use('/suppliers', supplierRouter);
+app.use('/customers', customerRouter);
 app.use('/users', usersRouter);
 app.use('/purchases', purchasesRouter);
 
