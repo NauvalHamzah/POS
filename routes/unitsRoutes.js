@@ -1,12 +1,15 @@
-var express = require('express');
-var router = express.Router();
-const unit = require('../controllers/unitController')
-const { isLoggedIn } = require('../helpers/util')
+module.exports = function(db){
 
-router.get('/add', isLoggedIn, unit.addUnit)
-router.post('/add', isLoggedIn, unit.saveUnit)
-router.get('/delete/:id', isLoggedIn, unit.removeUnit)
-router.get('/edit/:id', isLoggedIn, unit.getEdit)
-router.post('/edit/:id', isLoggedIn, unit.updateUnit)
+    var express = require('express');
+    var router = express.Router();
+    const unit = require('../controllers/unitController')(db)
+    const { isLoggedIn } = require('../helpers/util')
 
-module.exports = router;
+    router.get('/add', isLoggedIn, unit.addUnit)
+    router.post('/add', isLoggedIn, unit.saveUnit)
+    router.get('/delete/:id', isLoggedIn, unit.removeUnit)
+    router.get('/edit/:id', isLoggedIn, unit.getEdit)
+    router.post('/edit/:id', isLoggedIn, unit.updateUnit)
+
+return router;
+}

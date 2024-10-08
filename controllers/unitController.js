@@ -1,6 +1,6 @@
-const Unit = require('../models/UnitModel')
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+module.exports = function(db){
+
+const Unit = require('../models/UnitModel')(db)
 
 async function getUnit(req, res) {
     try {
@@ -82,4 +82,5 @@ function updateUnit(req, res) {
     })
 }
 
-module.exports = { getUnit, addUnit, saveUnit, removeUnit, getEdit, updateUnit }
+return { getUnit, addUnit, saveUnit, removeUnit, getEdit, updateUnit }
+}

@@ -5,15 +5,15 @@
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">Purchases</h1>
+                <h1 class="h3 mb-2 text-gray-800">Sales</h1>
 
-                <!-- Purchases Data -->
+                <!-- Sales Data -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
                         <h3 class="m-0 font-weight-bold">Transaction</h3>
                     </div>
                     <div class="card-body">
-                        <form action="" method="post" id="purchaseForm">
+                        <form action="" method="post" id="saleForm">
                             <div class="form-group row mb-4">
                                 <div class="form-group col-md-4">
                                     <label for="invoice">Invoice</label>
@@ -41,7 +41,7 @@
                                         <% goods.forEach(function(barc, index) { %>
                                             <option value="<%= barc.barcode %>" data-name="<%= barc.name %>"
                                                 data-stock="<%= barc.stock %>"
-                                                data-purchaseprice="<%= barc.purchaseprice %>">
+                                                data-sellingprice="<%= barc.sellingprice %>">
                                                 <%= barc.barcode+' - '+barc.name %>
                                             </option>
                                             <% }) %>
@@ -58,8 +58,8 @@
                             </div>
                             <div class="form-group row mb-2">
                                 <div class="form-group col-md-4">
-                                    <label for="purchasePrice">Purchase Price</label>
-                                    <input type="text" class="form-control" id="purchasePrice" name="purchasePrice" readonly>
+                                    <label for="sellingPrice">Selling Price</label>
+                                    <input type="text" class="form-control" id="sellingPrice" name="sellingPrice" readonly>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="qty">Qty</label>
@@ -70,7 +70,7 @@
                                     <input type="text" class="form-control" id="totalPrice" name="totalPrice" readonly>
                                 </div>
                             </div>
-                        <a href="#" id="addPurchaseItem" class="btn btn-primary btn-icon-split">
+                        <a href="#" id="addSaleItem" class="btn btn-primary btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-plus"></i>
                             </span>
@@ -78,7 +78,7 @@
                         </a>
                         <hr style="border-top: 1px solid #a0a0a0;" class="mt-5">
                         <div class="table-responsive">
-                            <table class="table table-striped" id="purchasedItemTable" width="100%" cellspacing="0">
+                            <table class="table table-striped" id="saleItemTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
                                         <th>No.</th>
@@ -87,10 +87,10 @@
                                         <th>Qty</th>
                                         <th>Price</th>
                                         <th>Total Price</th>
-                                        <th></th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody id="purchasedItemsTableBody">
+                                <tbody id="saleItemsTableBody">
                                     <!--Use script to fill table body-->
                                 </tbody>
                             </table>
@@ -105,18 +105,31 @@
                             </div>
                         </div>
                         <div class="form-group row mb-3">
-                            <label for="supplier" class="col-sm-2 col-form-label">Supplier</label>
+                            <label for="pay" class="col-sm-2 col-form-label">Pay</label>
                             <div class="col-sm-10">
-                                <select class="form-control" id="supplier" name="supplier">
-                                    <% suppliers.forEach(function(supplier, index) { %>
-                                        <option value="<%= supplier.supplierid %>" >
-                                            <%= supplier.name %>
+                                <input type="number" class="form-control" id="pay" name="pay">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                            <label for="change" class="col-sm-2 col-form-label">Change</label>
+                            <div class="col-sm-10">
+                                <input type="hidden" id="changeActual" name="changeActual">
+                                <input type="text" class="form-control" id="changeDisplay" name="changeDisplay" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row mb-3">
+                            <label for="customer" class="col-sm-2 col-form-label">Customer</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="customer" name="customer">
+                                    <% customers.forEach(function(customer, index) { %>
+                                        <option value="<%= customer.customerid %>" >
+                                            <%= customer.name %>
                                         </option>
                                         <% }) %>
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" form="purchaseForm" class="btn btn-success btn-icon-split">
+                        <button type="submit" form="saleForm" class="btn btn-success btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-plus"></i>
                             </span>
@@ -124,7 +137,7 @@
                                 Finish
                             </span>
                         </button>
-                        <a href="/purchases" class="btn btn-warning btn-icon-split">
+                        <a href="/sales" class="btn btn-warning btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-arrow-left"></i>
                             </span>
@@ -143,20 +156,21 @@
                 //Initialization
                 $(document).ready(function () {
                     const invoiceId = '<%= item.invoice %>'
-                    const supplierId = '<%= item.supplier %>'
-                    fetchPurchasedItems(invoiceId);
-                    $('#supplier').val(supplierId);
+                    const customerId = '<%= item.customer %>' || 1
+                    fetchSaleItems(invoiceId);
+                    $('#customer').val(customerId);
                 })
 
                 //Update table content
-                function fetchPurchasedItems(invoiceId) {
-                    $.get(`/purchases/showPurchaseItem/${invoiceId}`, function(data) {
-                        const purchasedItems = data;
-                        purchasedItemsTable(purchasedItems);  
-                        updateTotalSummary(purchasedItems);  
+                function fetchSaleItems(invoiceId) {
+                    $.get(`/sales/showSaleItem/${invoiceId}`, function(data) {
+                        const saleItems = data;
+                        saleItemsTable(saleItems);  
+                        updateTotalSummary(saleItems);  
+                        updateChange()
                     })
                     .fail(function(err) {
-                        console.log('Error fetching purchased items:', err);
+                        console.log('Error fetching sale items:', err);
                     });
                 }
 
@@ -165,69 +179,76 @@
                     const selectedOption = $(this).find('option:selected');
                     const goodsName = selectedOption.data('name'); 
                     const stock = selectedOption.data('stock'); 
-                    const purchasePrice = selectedOption.data('purchaseprice'); 
-                    const totalPrice = formatCurrency($('#qty').val() * purchasePrice);
+                    const sellingPrice = selectedOption.data('sellingprice'); 
+                    const totalPrice = formatCurrency($('#qty').val() * sellingPrice);
 
                     $('#goodsName').val(goodsName); $('#stock').val(stock);
-                    $('#purchasePrice').val(purchasePrice);
+                    $('#sellingPrice').val(sellingPrice);
                     $('#totalPrice').val(totalPrice)
                 }); 
                     
                 //Quantity input
                 $('#qty').on('input change',
                     function () {
-                        const
-                        purchasePrice = $('#barcode').find('option:selected').data('purchaseprice');
-                        const totalPrice = formatCurrency($(this).val() * purchasePrice);
+                        const sellingPrice = $('#barcode').find('option:selected').data('sellingprice');
+                        const totalPrice = formatCurrency($(this).val() * sellingPrice);
                         $('#totalPrice').val(totalPrice);
                     });
-                
 
-                    $('#addPurchaseItem').on('click', function (e) {
-                        e.preventDefault(); 
-                        const invoice = $('#invoice').val(); 
-                        const barcode = $('#barcode').val(); 
-                        const qty = $('#qty').val(); 
-                        const purchasePrice = $('#purchasePrice').val(); 
-                        const data = {
-                                    invoice: invoice, 
-                                    barcode: barcode, 
-                                    qty: qty, 
-                                    purchasePrice: purchasePrice
-                                };
-                        $.ajax({
-                            url: '/purchases/addPurchaseItem', 
-                            type: 'POST', 
-                            data: JSON.stringify(data), 
-                            contentType: 'application/json', 
-                            success:
-                                function (response) {
-                                    if (response.success) {
-                                        purchasedItemsTable(response.purchasedItems);
-                                        updateTotalSummary(response.purchasedItems);
-                                        $('#qty').val('');
-                                        $('#barcode').prop('selectedIndex', 0).trigger('change');
-                                    } else {
-                                        console.log('Failed to add item:', response.message);
-                                    }
-                                }, 
-                            error:
-                                function (error) { console.log(error); }
-                        });
+                //Pay Input
+                $('#pay').on('input change',
+                    function () {
+                        updateChange()
                     });
                 
-                function purchasedItemsTable(purchasedItems) {
-                    $('#purchasedItemsTableBody').empty(); purchasedItems.forEach((item,index) => {
-                        const formattedPurchasePrice = formatCurrency(item.purchaseprice);
+
+                $('#addSaleItem').on('click', function (e) {
+                    e.preventDefault(); 
+                    const invoice = $('#invoice').val(); 
+                    const barcode = $('#barcode').val(); 
+                    const qty = $('#qty').val(); 
+                    const sellingPrice = $('#sellingPrice').val(); 
+                    const data = {
+                                invoice: invoice, 
+                                barcode: barcode, 
+                                qty: qty, 
+                                sellingPrice: sellingPrice
+                            };
+                    $.ajax({
+                        url: '/sales/addSaleItem', 
+                        type: 'POST', 
+                        data: JSON.stringify(data), 
+                        contentType: 'application/json', 
+                        success:
+                            function (response) {
+                                if (response.success) {
+                                    saleItemsTable(response.saleItems);
+                                    updateTotalSummary(response.saleItems);
+                                    updateChange();
+                                    $('#qty').val('');
+                                    $('#barcode').prop('selectedIndex', 0).trigger('change');
+                                } else {
+                                    console.log('Failed to add item:', response.message);
+                                }
+                            }, 
+                        error:
+                            function (error) { console.log(error); }
+                    });
+                });
+                
+                function saleItemsTable(saleItems) {
+                    $('#saleItemsTableBody').empty(); 
+                        saleItems.forEach((item,index) => {
+                        const formattedSellingPrice = formatCurrency(item.sellingprice);
                         const formattedTotalPrice = formatCurrency(item.totalprice);
 
-                        $('#purchasedItemsTableBody').append(`
+                        $('#saleItemsTableBody').append(`
                             <tr>
                                 <td>${index + 1}</td>
                                 <td>${item.barcode}</td>
                                 <td>${item.name}</td>
                                 <td>${item.quantity}</td>
-                                <td>${formattedPurchasePrice}</td>
+                                <td>${formattedSellingPrice}</td>
                                 <td>${formattedTotalPrice}</td>
                                 <td>${deleteButton(item.id)}</td>
                             </tr>
@@ -235,11 +256,22 @@
                     });
                 }
 
-                function updateTotalSummary(purchasedItems) {
-                    const totalSummary = purchasedItems.reduce((sum, item) => sum +
-                        parseFloat(item.totalprice), 0);
+                function updateTotalSummary(saleItems) {
+                    const totalSummary = saleItems.reduce((sum, item) => sum + parseFloat(item.totalprice), 0);
+                    const pay = '<%= item.pay %>'
+                    const change = '<%= item.change %>'
                     $('#totalSummaryActual').val((totalSummary));
                     $('#totalSummaryDisplay').val(formatCurrency(totalSummary));
+                    $('#pay').val(pay);
+                    $('#changeActual').val(change);
+                    $('#changeDisplay').val(formatCurrency(change))
+                }
+
+                function updateChange(){
+                    const pay = $('#pay').val()
+                    const changes = pay - $('#totalSummaryActual').val()
+                        $('#changeActual').val(changes)
+                        $('#changeDisplay').val(formatCurrency(changes))
                 }
 
                 function formatCurrency(amount) {
@@ -255,12 +287,12 @@
                 function deleteButton(id){
                     return `
                 <a href="#" class="btn btn-danger btn-circle"
-                data-bs-toggle="modal" data-bs-target="#deletePurchaseItemModal-${id}">
+                data-bs-toggle="modal" data-bs-target="#deleteSaleItemModal-${id}">
                     <i class="fas fa-trash"></i>
                 </a>
 
-                <!-- Delete Purchase Item Modal-->
-                <div class="modal fade" id="deletePurchaseItemModal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <!-- Delete Sale Item Modal-->
+                <div class="modal fade" id="deleteSaleItemModal-${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -271,7 +303,7 @@
                             <div class="modal-body">Are you sure you want delete it?</div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
-                                <a class="btn btn-primary" onclick="removePurchaseItem('${id}')">Yes</a>
+                                <a class="btn btn-primary" onclick="removeSaleItem('${id}')">Yes</a>
                             </div>
                         </div>
                     </div>
@@ -279,18 +311,17 @@
                 `;
                 }
 
-                function removePurchaseItem(id) {
+                function removeSaleItem(id) {
                     $.ajax({
-                        url: `/purchases/item/delete/${id}`, 
+                        url: `/sales/item/delete/${id}`, 
                         type: 'GET', 
                         success: function() {
-                            const modalElement = $(`#deletePurchaseItemModal-${id}`);
+                            const modalElement = $(`#deleteSaleItemModal-${id}`);
                             const modalInstance = bootstrap.Modal.getInstance(modalElement[0]);
                             modalInstance.hide();
                             
                             const invoiceId = '<%= item.invoice %>'
-                            fetchPurchasedItems(invoiceId);
-                            
+                            fetchSaleItems(invoiceId);                            
                         },
                         error: function(err) {
                             console.log('Error:', err); 
