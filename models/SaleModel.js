@@ -135,6 +135,40 @@ module.exports = function(db){
             })
         }
 
+        static async getDate(){
+            return new Promise((resolve, reject)=>{
+                const sql = `SELECT time FROM sales`
+                db.query(sql,(err,result)=>{
+                    if (err){
+                        console.log(err)
+                        return reject(err)
+                    }
+                    resolve(result.rows)
+                })
+            })
+        }
+
+        static async getSale(startDate, endDate){
+            if(typeof(endDate)==="string"){
+                const endDateObj = new Date(endDate)
+                endDateObj.setHours(23, 59, 59, 999)
+                endDate = endDateObj
+            } else {
+                endDate.setHours(23, 59, 59, 999)
+            }
+
+            return new Promise((resolve, reject)=>{
+                const sql = `SELECT * FROM sales WHERE time>=$1 AND time<=$2 ORDER BY time ASC`
+                db.query(sql,[startDate,endDate],(err,result)=>{
+                    if (err){
+                        console.log(err)
+                        return reject(err)
+                    }
+                    resolve(result.rows)
+                })
+            })
+        } 
+
     }
 
 return Sale

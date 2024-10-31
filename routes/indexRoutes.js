@@ -3,7 +3,7 @@ module.exports = function(db){
     var express = require('express');
     var router = express.Router();
     const login = require('../controllers/loginController')(db)
-    const menu = require('../controllers/menuController')
+    const menu = require('../controllers/menuController')(db)
     const { isLoggedIn } = require('../helpers/util')
 
     router.get('/', login.loginGet)
