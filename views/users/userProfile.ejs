@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+<%- include('../partials/sidebar') %>
+<%- include('../partials/topbar') %>
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <%- include('../partials/alert') %>
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Profile</h1>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Your Profile</h6>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" id="userUpdateForm">
+                    <input type="hidden" name="userid" value="<%= user.id %>">
+                    <div class="form-group row mb-2">
+                        <label for="email" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>">
+                        </div>
+                    </div>
+                    <div class="form-group row mb-2">
+                        <label for="name" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="name" name="name" value="<%= user.name %>" >
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer py-3">
+                <button type="submit" form="userUpdateForm" class="btn btn-success btn-icon-split">
+                    <span class="icon text-white-50">
+                        <i class="fa-solid fa-database"></i>
+                    </span>
+                    <span class="text">
+                        Update
+                    </span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+    <!-- /.container-fluid -->
+    <%- include('../partials/footer') %>

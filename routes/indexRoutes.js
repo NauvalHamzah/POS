@@ -11,6 +11,7 @@ module.exports = function(db){
     router.get('/logout', login.logout)
 
     router.get('/dashboard', isLoggedIn, menu.dashboard)
+    router.post('/download-report', isLoggedIn, menu.report)
     router.get('/goods', isLoggedIn, menu.goods)
     router.get('/units', isLoggedIn, menu.units)
     router.get('/suppliers', isLoggedIn, menu.suppliers)

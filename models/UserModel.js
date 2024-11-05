@@ -47,6 +47,22 @@ module.exports = function(db){
                 })
         }
 
+        static updateProfile(email, name, index, callback) {
+            db.query('UPDATE users SET email=$1,name=$2 WHERE userid=$3',
+                [email, name, index], function (err) {
+                    if (err) return console.log(err)
+                    callback()
+                })
+        }
+
+        static updatePassword(password, email, callback){
+            db.query('UPDATE users SET password=$1 WHERE email=$2',
+                [password, email], function (err) {
+                    if (err) return console.log(err)
+                    callback()
+                })
+        }
+
         static async totalTable(){
             return new Promise((resolve, reject)=>{
                 const sql = `select count(*) as total from users`

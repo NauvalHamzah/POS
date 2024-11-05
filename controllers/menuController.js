@@ -1,3 +1,5 @@
+const { createObjectCsvStringifier } = require('csv-writer');
+
 module.exports = function(db){
 
     const Purchase = require('../models/PurchaseModel')(db)
@@ -147,5 +149,35 @@ module.exports = function(db){
         return result;
     }
 
-return { dashboard, goods, units, suppliers, customers, users, purchases, sales }
+    function report(req, res) {
+        const areaChartData = req.body; // Receive the data from the client
+    
+        // Format data for CSV
+        const csvData = areaChartData.month.map((month, index) => ({
+            Month: month,
+            Expense: areaChartData.purchase[index],
+            Revenue: areaChartData.sales[index],
+            Earning: areaChartData.earnings[index]
+        }));
+    
+        // Set up CSV stringifier with headers
+        const csvStringifier = createObjectCsvStringifier({
+            header: [
+                { id: 'Month', title: 'Month' },
+                { id: 'Expense', title: 'Expense' },
+                { id: 'Revenue', title: 'Revenue' },
+                { id: 'Earning', title: 'Earning' }
+            ]
+        });
+    
+        // Generate CSV content with headers
+        const csvContent = csvStringifier.getHeaderString() + csvStringifier.stringifyRecords(csvData);
+    
+        // Send CSV as a downloadable file
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="report.csv"');
+        res.send(csvContent);
+    }
+
+return { dashboard, goods, units, suppliers, customers, users, purchases, sales, report }
 }
