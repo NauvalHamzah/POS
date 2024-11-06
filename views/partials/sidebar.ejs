@@ -13,11 +13,13 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
+    <% if(user.role == 'Admin'){ %>
     <li class="nav-item <%= activeRoute === 'dashboard' ? 'active' : '' %>">
         <a class="nav-link" href="/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
+    <% } %>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -28,6 +30,7 @@
     </div>
 
     <!-- Nav Item - Utilities Collapse Menu -->
+    <% if(user.role == 'Admin'){ %>
     <li class="nav-item <%= activeRoute === 'goodsUtility' ? 'active' : '' %>">
         <a class="nav-link collapsed with-arrow" href="#" data-bs-toggle="collapse"
             data-bs-target="#collapseUtilities" aria-expanded="<%= activeRoute === 'goodsUtility' ? 'true' : 'false' %>" aria-controls="collapseUtilities">
@@ -43,6 +46,7 @@
             </div>
         </div>
     </li>
+    <% } %>
 
     <!-- Nav Item - Suppliers -->
     <li class="nav-item <%= activeRoute === 'suppliers' ? 'active' : '' %>">
@@ -59,11 +63,13 @@
     </li>
 
     <!-- Nav Item - Users -->
+    <% if(user.role == 'Admin'){ %>
     <li class="nav-item <%= activeRoute === 'users' ? 'active' : '' %>">
         <a class="nav-link" href="/users">
             <i class="fa-solid fa-user"></i>
             <span>Users</span></a>
     </li>
+    <% } %>
 
     <!-- Divider -->
     <hr class="sidebar-divider">

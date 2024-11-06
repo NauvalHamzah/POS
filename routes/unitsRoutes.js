@@ -3,7 +3,7 @@ module.exports = function(db){
     var express = require('express');
     var router = express.Router();
     const unit = require('../controllers/unitController')(db)
-    const { isLoggedIn } = require('../helpers/util')
+    const { isLoggedIn } = require('../helpers/util')(db)
 
     router.get('/add', isLoggedIn, unit.addUnit)
     router.post('/add', isLoggedIn, unit.saveUnit)

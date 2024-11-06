@@ -2,12 +2,12 @@ module.exports = function(db){
     var express = require('express');
     var router = express.Router();
     const purchase = require('../controllers/purchaseController')(db)
-    const { isLoggedIn } = require('../helpers/util')
+    const { isLoggedIn, isOperatorPurchase } = require('../helpers/util')(db)
 
     router.get('/add', isLoggedIn, purchase.addPurchase)
-    router.get('/delete/:id', isLoggedIn, purchase.removePurchase)
-    router.get('/edit/:id', isLoggedIn, purchase.getEdit)
-    router.post('/edit/:id', isLoggedIn, purchase.updatePurchase)
+    router.get('/delete/:id', isLoggedIn, isOperatorPurchase, purchase.removePurchase)
+    router.get('/edit/:id', isLoggedIn, isOperatorPurchase, purchase.getEdit)
+    router.post('/edit/:id', isLoggedIn, isOperatorPurchase, purchase.updatePurchase)
     router.get('/showPurchaseItem/:invoice', isLoggedIn, purchase.showPurchaseItem)
     router.post('/addPurchaseItem', isLoggedIn, purchase.addPurchaseItem)
     router.get('/item/delete/:id', isLoggedIn, purchase.removePurchaseItem)

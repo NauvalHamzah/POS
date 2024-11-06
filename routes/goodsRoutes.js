@@ -3,7 +3,7 @@ module.exports = function(db){
   var express = require('express');
   var router = express.Router();
   const goods = require('../controllers/goodsController')(db)
-  const { isLoggedIn } = require('../helpers/util')
+  const { isLoggedIn } = require('../helpers/util')(db)
   const multer = require('multer');
   const path = require('path');
 

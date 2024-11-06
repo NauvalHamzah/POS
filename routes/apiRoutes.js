@@ -9,7 +9,7 @@ module.exports = function(db){
     const user = require('../controllers/userController')(db)
     const purchase = require('../controllers/purchaseController')(db)
     const sale = require('../controllers/saleController')(db)
-    const { isLoggedIn } = require('../helpers/util')
+    const { isLoggedIn } = require('../helpers/util')(db)
 
     router.get('/goods', isLoggedIn, goods.getGoods);
     router.get('/units', isLoggedIn, unit.getUnit);
