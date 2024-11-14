@@ -1,4 +1,4 @@
-module.exports = function(db){
+module.exports = function(db, io){
 
     const Goods = require('../models/GoodsModel')(db)
     const Unit = require('../models/UnitModel')(db)
@@ -104,5 +104,15 @@ module.exports = function(db){
         })
     }
 
-return { getGoods, addGoods, saveGoods, removeGoods, getEdit, updateGoods }
+    async function checkStock(req, res) {
+        try {
+            const result = await db.query('SELECT * FROM goods WHERE stock < 6');
+            res.json(result.rows); // Send low stock data as JSON
+        } catch (err) {
+            console.error('Error fetching low stock items:', err);
+            res.status(500).json({ error: 'Failed to fetch low stock items' });
+        }
+    }
+
+return { getGoods, addGoods, saveGoods, removeGoods, getEdit, updateGoods, checkStock }
 }

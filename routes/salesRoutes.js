@@ -1,7 +1,7 @@
-module.exports = function(db){
+module.exports = function(db, io){
     var express = require('express');
     var router = express.Router();
-    const sale = require('../controllers/saleController')(db)
+    const sale = require('../controllers/saleController')(db, io)
     const { isLoggedIn, isOperatorSale } = require('../helpers/util')(db)
 
     router.get('/add', isLoggedIn, sale.addSale)

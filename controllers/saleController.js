@@ -1,4 +1,4 @@
-module.exports = function(db){
+module.exports = function(db, io){
 
     const Sale = require('../models/SaleModel')(db)
     const Goods = require('../models/GoodsModel')(db)
@@ -50,6 +50,7 @@ module.exports = function(db){
     function removeSale(req, res) {
         const invoice = req.params.id
         Sale.remove(invoice, function () {
+            checkStock()
             res.redirect('/sales')
         })
     }
@@ -57,6 +58,7 @@ module.exports = function(db){
     function removeSaleItem(req, res) {
         const id = req.params.id
         Sale.removeItem(id, function () {
+            checkStock()
             res.sendStatus(200)
         })
     }
@@ -65,10 +67,10 @@ module.exports = function(db){
         const invoice = req.params.id
         const goods = await Goods.getGoods()
         const customers = await Customer.getCustomers()
-        Sale.getEdit(invoice, function (item) {
-            let time = formatTime(item.time)
+        Sale.getEdit(invoice, function (inv) {
+            let time = formatTime(inv.time)
             res.render('sales/salesForm', {
-                item,
+                inv,
                 activeRoute: 'sales',
                 title: 'POS - Sales',
                 activeUtil: '',
@@ -88,6 +90,7 @@ module.exports = function(db){
         const change = req.body.changeActual || 0
         const operator = req.body.operatorid
         Sale.updateSale(invoice, customer, totalsum, pay, change, operator, function () {
+            checkStock()
             res.redirect('/sales')
         })
     }
@@ -106,6 +109,7 @@ module.exports = function(db){
         try{
             result = await Sale.addSaleItem(invoice, barcode, qty, sellingPrice) 
             const saleItems = await Sale.showSaleItem(invoice)
+            checkStock()
             res.json({ success: true, saleItems: saleItems })
         } catch (err){
             console.log('Error adding sale item:', err);
@@ -116,6 +120,17 @@ module.exports = function(db){
     function formatTime(dateString) {
         const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
         return new Intl.DateTimeFormat('id-ID', options).format(new Date(dateString)).replace(',', '');
+    }
+
+    async function checkStock() {
+        try {
+            const result = await db.query('SELECT * FROM goods WHERE stock < 6');
+            if (result.rows.length > 0) {
+                io.emit('lowStock', result.rows); // Emit notification
+            }
+        } catch (err) {
+            console.error('Error checking stock:', err);
+        }
     }
 
 return { getSale, addSale, removeSale, removeSaleItem, getEdit, updateSale, showSaleItem, addSaleItem }

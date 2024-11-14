@@ -18,7 +18,7 @@
                                 <div class="form-group col-md-4">
                                     <label for="invoice">Invoice</label>
                                     <input type="text" class="form-control" id="invoice" name="invoice"
-                                        value="<%= item.invoice %>" readonly>
+                                        value="<%= inv.invoice %>" readonly>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="time">Time</label>
@@ -39,9 +39,11 @@
                                     <label for="barcode">Goods Barcode</label>
                                     <select class="form-control" id="barcode" name="barcode">
                                         <% goods.forEach(function(barc, index) { %>
-                                            <option value="<%= barc.barcode %>" data-name="<%= barc.name %>"
+                                            <option value="<%= barc.barcode %>" 
+                                                data-name="<%= barc.name %>"
                                                 data-stock="<%= barc.stock %>"
-                                                data-purchaseprice="<%= barc.purchaseprice %>">
+                                                data-purchaseprice="<%= barc.purchaseprice %>"
+                                                <%= barcode == barc.barcode ? 'selected' : '' %>>
                                                 <%= barc.barcode+' - '+barc.name %>
                                             </option>
                                             <% }) %>
@@ -142,10 +144,11 @@
             <script>
                 //Initialization
                 $(document).ready(function () {
-                    const invoiceId = '<%= item.invoice %>'
-                    const supplierId = '<%= item.supplier %>'
+                    const invoiceId = '<%= inv.invoice %>'
+                    const supplierId = '<%= inv.supplier %>'
                     fetchPurchasedItems(invoiceId);
                     $('#supplier').val(supplierId);
+                    $('#barcode').trigger('change');
                 })
 
                 //Update table content
@@ -217,7 +220,8 @@
                     });
                 
                 function purchasedItemsTable(purchasedItems) {
-                    $('#purchasedItemsTableBody').empty(); purchasedItems.forEach((item,index) => {
+                    $('#purchasedItemsTableBody').empty(); 
+                    purchasedItems.forEach((item,index) => {
                         const formattedPurchasePrice = formatCurrency(item.purchaseprice);
                         const formattedTotalPrice = formatCurrency(item.totalprice);
 
@@ -288,7 +292,7 @@
                             const modalInstance = bootstrap.Modal.getInstance(modalElement[0]);
                             modalInstance.hide();
                             
-                            const invoiceId = '<%= item.invoice %>'
+                            const invoiceId = '<%= inv.invoice %>'
                             fetchPurchasedItems(invoiceId);
                             
                         },

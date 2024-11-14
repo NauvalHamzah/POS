@@ -18,7 +18,7 @@
                                 <div class="form-group col-md-4">
                                     <label for="invoice">Invoice</label>
                                     <input type="text" class="form-control" id="invoice" name="invoice"
-                                        value="<%= item.invoice %>" readonly>
+                                        value="<%= inv.invoice %>" readonly>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="time">Time</label>
@@ -155,10 +155,11 @@
             <script>
                 //Initialization
                 $(document).ready(function () {
-                    const invoiceId = '<%= item.invoice %>'
-                    const customerId = '<%= item.customer %>' || 1
+                    const invoiceId = '<%= inv.invoice %>'
+                    const customerId = '<%= inv.customer %>' || 1
                     fetchSaleItems(invoiceId);
                     $('#customer').val(customerId);
+                    $('#barcode').trigger('change');
                 })
 
                 //Update table content
@@ -258,8 +259,8 @@
 
                 function updateTotalSummary(saleItems) {
                     const totalSummary = saleItems.reduce((sum, item) => sum + parseFloat(item.totalprice), 0);
-                    const pay = '<%= item.pay %>'
-                    const change = '<%= item.change %>'
+                    const pay = '<%= inv.pay %>'
+                    const change = '<%= inv.change %>'
                     $('#totalSummaryActual').val((totalSummary));
                     $('#totalSummaryDisplay').val(formatCurrency(totalSummary));
                     $('#pay').val(pay);
@@ -320,7 +321,7 @@
                             const modalInstance = bootstrap.Modal.getInstance(modalElement[0]);
                             modalInstance.hide();
                             
-                            const invoiceId = '<%= item.invoice %>'
+                            const invoiceId = '<%= inv.invoice %>'
                             fetchSaleItems(invoiceId);                            
                         },
                         error: function(err) {

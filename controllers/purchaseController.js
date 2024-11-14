@@ -1,4 +1,4 @@
-module.exports = function(db){
+module.exports = function(db, io){
 
     const Purchase = require('../models/PurchaseModel')(db)
     const Goods = require('../models/GoodsModel')(db)
@@ -39,7 +39,12 @@ module.exports = function(db){
             const user = req.session.user.id
             const newPurchase = await Purchase.invoiceInit(user)
             const newInvoice = newPurchase.invoice;
-            res.redirect(`/purchases/edit/${newInvoice}`);
+            const barcode = req.query.barcode || '';
+            if (barcode){
+                res.redirect(`/purchases/edit/${newInvoice}?barcode=${barcode}`);
+            } else{
+                res.redirect(`/purchases/edit/${newInvoice}`);
+            }
         }
         catch(error){
             console.error("Error adding purchase: ", error);
@@ -50,6 +55,7 @@ module.exports = function(db){
     function removePurchase(req, res) {
         const invoice = req.params.id
         Purchase.remove(invoice, function () {
+            checkStock()
             res.redirect('/purchases')
         })
     }
@@ -57,25 +63,28 @@ module.exports = function(db){
     function removePurchaseItem(req, res) {
         const id = req.params.id
         Purchase.removeItem(id, function () {
+            checkStock()
             res.sendStatus(200)
         })
     }
 
     async function getEdit(req, res) {
         const invoice = req.params.id
+        const barcode = req.query.barcode || '';
         const goods = await Goods.getGoods()
         const suppliers = await Supplier.getSuppliers()
-        Purchase.getEdit(invoice, function (item) {
-            let time = formatTime(item.time)
+        Purchase.getEdit(invoice, function (inv) {
+            let time = formatTime(inv.time)
             res.render('purchases/purchasesForm', {
-                item,
+                inv,
                 activeRoute: 'purchases',
                 title: 'POS - Purchases',
                 activeUtil: '',
                 user: req.session.user,
                 time,
                 goods,
-                suppliers
+                suppliers,
+                barcode
             })
         })
     }
@@ -86,6 +95,7 @@ module.exports = function(db){
         const totalsum = req.body.totalSummaryActual
         const operator = req.body.operatorid
         Purchase.updatePurchase(invoice, supplier, totalsum, operator, function () {
+            checkStock()
             res.redirect('/purchases')
         })
     }
@@ -104,6 +114,7 @@ module.exports = function(db){
         try{
             result = await Purchase.addPurchaseItem(invoice, barcode, qty, purchasePrice) 
             const purchasedItems = await Purchase.showPurchaseItem(invoice)
+            checkStock()
             res.json({ success: true, purchasedItems: purchasedItems })
         } catch (err){
             console.log('Error adding purchase item:', err);
@@ -114,6 +125,17 @@ module.exports = function(db){
     function formatTime(dateString) {
         const options = { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false };
         return new Intl.DateTimeFormat('id-ID', options).format(new Date(dateString)).replace(',', '');
+    }
+
+    async function checkStock() {
+        try {
+            const result = await db.query('SELECT * FROM goods WHERE stock < 5');
+            if (result.rows.length > 0) {
+                io.emit('lowStock', result.rows);
+            }
+        } catch (err) {
+            console.error('Error checking stock:', err);
+        }
     }
 
 return { getPurchase, addPurchase, removePurchase, removePurchaseItem, getEdit, updatePurchase, showPurchaseItem, addPurchaseItem }

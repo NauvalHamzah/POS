@@ -2,6 +2,8 @@ require('dotenv').config()
 
 const express = require('express')
 const app = express()
+const http = require('http').createServer(app);  
+const io = require('socket.io')(http);  
 const bodyParser = require('body-parser')
 const path = require('path')
 var session = require('express-session');
@@ -34,14 +36,14 @@ app.use(session({
 app.use(flash())
 
 var indexRouter = require('./routes/indexRoutes')(db);
-var apiRouter = require('./routes/apiRoutes')(db);
-var goodsRouter = require('./routes/goodsRoutes')(db);
+var apiRouter = require('./routes/apiRoutes')(db, io);
+var goodsRouter = require('./routes/goodsRoutes')(db, io);
 var unitsRouter = require('./routes/unitsRoutes')(db);
 var supplierRouter = require('./routes/supplierRoutes')(db);
 var customerRouter = require('./routes/customerRoutes')(db);
 var usersRouter = require('./routes/userRoutes')(db);
-var purchasesRouter = require('./routes/purchasesRoutes')(db);
-var salesRouter = require('./routes/salesRoutes')(db);
+var purchasesRouter = require('./routes/purchasesRoutes')(db, io);
+var salesRouter = require('./routes/salesRoutes')(db, io);
 
 
 app.use('/', indexRouter);
@@ -55,9 +57,6 @@ app.use('/purchases', purchasesRouter);
 app.use('/sales', salesRouter);
 
 
-app.listen(3000, function () {
+http.listen(3000, function () {
     console.log('server berjalan di port 3000')
 })
-
-
-

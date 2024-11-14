@@ -1,8 +1,8 @@
-module.exports = function(db){
+module.exports = function(db, io){
 
   var express = require('express');
   var router = express.Router();
-  const goods = require('../controllers/goodsController')(db)
+  const goods = require('../controllers/goodsController')(db, io)
   const { isLoggedIn } = require('../helpers/util')(db)
   const multer = require('multer');
   const path = require('path');

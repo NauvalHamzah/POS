@@ -118,7 +118,7 @@
                     const isOperator = data.operator === operator;
 
                 return  `
-                    <a href="/purchases/edit/${data.invoice}" class="btn btn-success btn-circle ${!isOperator ? 'disabled' : ''}" 
+                    <a href="/sales/edit/${data.invoice}" class="btn btn-success btn-circle ${!isOperator ? 'disabled' : ''}" 
                     onclick="${!isOperator ? 'return false;' : ''}">
                         <i class="fa-solid fa-circle-info"></i>
                     </a>
@@ -140,7 +140,7 @@
                                 <div class="modal-body">Are you sure you want delete it?</div>
                                 <div class="modal-footer">
                                     <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
-                                    <a class="btn btn-primary ${!isOperator ? 'disabled' : ''}" href="/purchases/delete/${data.invoice}" 
+                                    <a class="btn btn-primary ${!isOperator ? 'disabled' : ''}" href="/sales/delete/${data.invoice}" 
                                     onclick="${!isOperator ? 'return false;' : ''}">Yes</a>
                                 </div>
                             </div>

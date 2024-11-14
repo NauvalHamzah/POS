@@ -1,8 +1,8 @@
-module.exports = function(db){
+module.exports = function(db, io){
 
     var express = require('express');
     var router = express.Router();
-    const goods = require('../controllers/goodsController')(db)
+    const goods = require('../controllers/goodsController')(db, io)
     const unit = require('../controllers/unitController')(db)
     const supplier = require('../controllers/supplierController')(db)
     const customer = require('../controllers/customerController')(db)
@@ -18,6 +18,7 @@ module.exports = function(db){
     router.get('/users', isLoggedIn, user.getUser);
     router.get('/purchases', isLoggedIn, purchase.getPurchase);
     router.get('/sales', isLoggedIn, sale.getSale);
+    router.get('/lowstock', isLoggedIn, goods.checkStock)
 
 return router;
 }
