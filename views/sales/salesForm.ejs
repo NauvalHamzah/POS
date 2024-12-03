@@ -166,6 +166,7 @@
                 function fetchSaleItems(invoiceId) {
                     $.get(`/sales/showSaleItem/${invoiceId}`, function(data) {
                         const saleItems = data;
+                        console.log(saleItems)
                         saleItemsTable(saleItems);  
                         updateTotalSummary(saleItems);  
                         updateChange()
@@ -173,6 +174,31 @@
                     .fail(function(err) {
                         console.log('Error fetching sale items:', err);
                     });
+                }
+
+                //Update goods stock
+                function fetchGoods() {
+                    $.get('/api/updateStock', function (data) {
+                        console.log(data);
+                        const selectElement = $('#barcode');
+
+                        // Clear the current options
+                        selectElement.empty();
+
+                        // Populate with new data
+                        data.goods.forEach(function (barc) {
+                            selectElement.append(`
+                                            <option value="${barc.barcode}" data-name="${barc.name}"
+                                                data-stock="${barc.stock}" data-selling="${barc.purchaseprice}">
+                                                ${barc.barcode} - ${barc.name}
+                                            </option>
+                                            `);
+                        });
+                        selectElement.trigger('change');
+                    })
+                        .fail(function (err) {
+                            console.log('Error fetching goods', err);
+                        });
                 }
 
                 //Goods Selection
@@ -226,6 +252,7 @@
                                     saleItemsTable(response.saleItems);
                                     updateTotalSummary(response.saleItems);
                                     updateChange();
+                                    fetchGoods();
                                     $('#qty').val('');
                                     $('#barcode').prop('selectedIndex', 0).trigger('change');
                                 } else {
@@ -322,7 +349,9 @@
                             modalInstance.hide();
                             
                             const invoiceId = '<%= inv.invoice %>'
-                            fetchSaleItems(invoiceId);                            
+                            fetchSaleItems(invoiceId);
+                            fetchGoods();
+                            $('#barcode').prop('selectedIndex', 0).trigger('change');                            
                         },
                         error: function(err) {
                             console.log('Error:', err); 

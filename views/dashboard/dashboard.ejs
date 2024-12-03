@@ -1,6 +1,6 @@
-<%- include('./partials/header') %>
-    <%- include('./partials/sidebar') %>
-        <%- include('./partials/topbar') %>
+<%- include('../partials/header') %>
+    <%- include('../partials/sidebar') %>
+        <%- include('../partials/topbar') %>
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
@@ -338,8 +338,8 @@
                 createAreaChart(labelsArea, dataArea)
 
                 const labelsPie = ["Direct", "Customer"]
-                const dataPie = ['<%= (totalSalesDirect) %>', '<%= (totalSales-totalSalesDirect) %>']
+                const dataPie = ['<%= (countSales) %>', '<%= (countSales-countSalesDirect) %>']
                 createPieChart(labelsPie, dataPie)
             </script>
             <!-- /.container-fluid -->
-            <%- include('./partials/footer') %>
+            <%- include('../partials/footer') %>

@@ -1,17 +1,23 @@
-<%- include('./partials/header') %>
-    <%- include('./partials/sidebar') %>
-        <%- include('./partials/topbar') %>
+<%- include('../partials/header') %>
+    <%- include('../partials/sidebar') %>
+        <%- include('../partials/topbar') %>
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- Page Heading -->
-                <h1 class="h3 mb-2 text-gray-800">User</h1>
-                <p class="mb-4">This is the list of users</p>
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Suppliers</h1>
+                </div>
 
-                <!-- Data of Users -->
+                <!-- Content Row -->
+                <div class="row">
+                    <p>This is data of Suppliers </p>
+                </div>
+
+                <!-- Data of Suppliers -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <a href="/users/add" class="btn btn-primary btn-icon-split">
+                        <a href="/suppliers/add" class="btn btn-primary btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-plus"></i>
                             </span>
@@ -20,22 +26,22 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="usersTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="suppliersTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Userid</th>
-                                        <th>Email</th>
+                                        <th>Supplier ID</th>
                                         <th>Name</th>
-                                        <th>Role</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>Userid</th>
-                                        <th>Email</th>
+                                        <th>Supplier ID</th>
                                         <th>Name</th>
-                                        <th>Role</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -50,16 +56,16 @@
 
             <script>
                 $(document).ready(function () {
-                    $('#usersTable').DataTable({
+                    $('#suppliersTable').DataTable({
                         "lengthMenu": [[3, 10, 100], [3, 10, 100]],
                         "processing": true,
                         "serverSide": true,
-                        "ajax": "/api/users",
+                        "ajax": "/api/suppliers",
                         "columns": [
-                            { "data": "userid" },
-                            { "data": "email" },
+                            { "data": "supplierid" },
                             { "data": "name" },
-                            { "data": "role" },
+                            { "data": "address" },
+                            { "data": "phone" },
                             {
                                 "data": null,
                                 "render": renderActionColumn,
@@ -71,16 +77,16 @@
 
                 function renderActionColumn(data, type, row) {
                     return `
-                <a href="/users/edit/${data.userid}" class="btn btn-success btn-circle">
+                <a href="/suppliers/edit/${data.supplierid}" class="btn btn-success btn-circle">
                     <i class="fa-solid fa-circle-info"></i>
                 </a>
                 <a href="#" class="btn btn-danger btn-circle"
-                data-bs-toggle="modal" data-bs-target="#deleteUserModal-${data.userid}">
+                data-bs-toggle="modal" data-bs-target="#deleteSupplierModal-${data.supplierid}">
                     <i class="fas fa-trash"></i>
                 </a>
 
                 <!-- Delete User Modal-->
-                <div class="modal fade" id="deleteUserModal-${data.userid}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="deleteSupplierModal-${data.supplierid}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -91,7 +97,7 @@
                             <div class="modal-body">Are you sure you want delete it?</div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
-                                <a class="btn btn-primary" href="/users/delete/${data.userid}">Yes</a>
+                                <a class="btn btn-primary" href="/suppliers/delete/${data.supplierid}">Yes</a>
                             </div>
                         </div>
                     </div>
@@ -99,5 +105,6 @@
                 `;
                 }
             </script>
+
             <!-- /.container-fluid -->
-            <%- include('./partials/footer') %>
+            <%- include('../partials/footer') %>

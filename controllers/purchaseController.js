@@ -4,6 +4,15 @@ module.exports = function(db, io){
     const Goods = require('../models/GoodsModel')(db)
     const Supplier = require('../models/SupplierModel')(db)
 
+    function purchases(req, res) {
+        res.render('purchases/purchases', {
+            activeRoute: 'purchases',
+            title: 'POS - Purchases',
+            activeUtil: '',
+            user: req.session.user
+        })
+    }
+
     async function getPurchase(req, res) {
         try {
             let params = []
@@ -102,7 +111,9 @@ module.exports = function(db, io){
 
     async function showPurchaseItem(req, res){
         try {
+            const invoice = req.params.invoice
             const purchasedItems = await Purchase.showPurchaseItem(req.params.invoice)
+            const example = await Purchase.showPurchaseItem("INV-20241203-1")
             res.status(200).json(purchasedItems)
         } catch (error) {
             res.status(500).json({ message: error.message })
@@ -129,8 +140,10 @@ module.exports = function(db, io){
 
     async function checkStock() {
         try {
-            const result = await db.query('SELECT * FROM goods WHERE stock < 5');
+            const result = await db.query('SELECT * FROM goods WHERE stock < 6');
             if (result.rows.length > 0) {
+                io.emit('lowStock', result.rows);
+            } else {
                 io.emit('lowStock', result.rows);
             }
         } catch (err) {
@@ -138,5 +151,5 @@ module.exports = function(db, io){
         }
     }
 
-return { getPurchase, addPurchase, removePurchase, removePurchaseItem, getEdit, updatePurchase, showPurchaseItem, addPurchaseItem }
+return { purchases, getPurchase, addPurchase, removePurchase, removePurchaseItem, getEdit, updatePurchase, showPurchaseItem, addPurchaseItem }
 }

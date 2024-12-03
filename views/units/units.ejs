@@ -1,23 +1,24 @@
-<%- include('./partials/header') %>
-    <%- include('./partials/sidebar') %>
-        <%- include('./partials/topbar') %>
+<%- include('../partials/header') %>
+    <%- include('../partials/sidebar') %>
+        <%- include('../partials/topbar') %>
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
                 <!-- Page Heading -->
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Goods</h1>
+                    <h1 class="h3 mb-0 text-gray-800">Units</h1>
                 </div>
 
                 <!-- Content Row -->
+
                 <div class="row">
-                    <p>This is data of Goods</p>
+                    <p>This is data of units </p>
                 </div>
 
-                <!-- Data of Goods -->
+                <!-- Data of Units -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <a href="/goods/add" class="btn btn-primary btn-icon-split">
+                        <a href="/units/add" class="btn btn-primary btn-icon-split">
                             <span class="icon text-white-50">
                                 <i class="fa-solid fa-plus"></i>
                             </span>
@@ -26,28 +27,20 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="goodsTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered" id="unitsTable" width="100%" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th>Barcode</th>
-                                        <th>Name</th>
-                                        <th>Stock</th>
                                         <th>Unit</th>
-                                        <th>Puchase Price</th>
-                                        <th>Selling Price</th>
-                                        <th>Picture</th>
+                                        <th>Name</th>
+                                        <th>Note</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>Barcode</th>
-                                        <th>Name</th>
-                                        <th>Stock</th>
                                         <th>Unit</th>
-                                        <th>Puchase Price</th>
-                                        <th>Selling Price</th>
-                                        <th>Picture</th>
+                                        <th>Name</th>
+                                        <th>Note</th>
                                         <th>Action</th>
                                     </tr>
                                 </tfoot>
@@ -62,36 +55,15 @@
 
             <script>
                 $(document).ready(function () {
-                    console.log("Calling API")
-                    $('#goodsTable').DataTable({
+                    $('#unitsTable').DataTable({
                         "lengthMenu": [[3, 10, 100], [3, 10, 100]],
                         "processing": true,
                         "serverSide": true,
-                        "ajax": "/api/goods",
+                        "ajax": "/api/units",
                         "columns": [
-                            { "data": "barcode" },
-                            { "data": "name" },
-                            { "data": "stock" },
                             { "data": "unit" },
-                            {
-                                "data": "purchaseprice",
-                                "render": function (data, type, row) {
-                                    return formatCurrency(data);
-                                }
-                            },
-                            { 
-                                "data": "sellingprice",
-                                "render": function (data, type, row) {
-                                    return formatCurrency(data);
-                                } 
-                            },
-                            { 
-                                "data": "picture",
-                                "render": function (data, type, row) {
-                                    return '<img src="' + data + '" alt="Product Image" style="width: 50px;"/>';
-                                },
-                                "orderable": false
-                            },
+                            { "data": "name" },
+                            { "data": "note" },
                             {
                                 "data": null,
                                 "render": renderActionColumn,
@@ -101,22 +73,18 @@
                     });
                 });
 
-                function formatCurrency(amount){
-                    return 'Rp ' + parseFloat(amount).toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                }
-
                 function renderActionColumn(data, type, row) {
                     return `
-                <a href="/goods/edit/${data.barcode}" class="btn btn-success btn-circle">
+                <a href="/units/edit/${data.unit}" class="btn btn-success btn-circle">
                     <i class="fa-solid fa-circle-info"></i>
                 </a>
                 <a href="#" class="btn btn-danger btn-circle"
-                data-bs-toggle="modal" data-bs-target="#deleteGoodsModal-${data.barcode}">
+                data-bs-toggle="modal" data-bs-target="#deleteUnitModal-${data.unit}">
                     <i class="fas fa-trash"></i>
                 </a>
 
                 <!-- Delete Unit Modal-->
-                <div class="modal fade" id="deleteGoodsModal-${data.barcode}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal fade" id="deleteUnitModal-${data.unit}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -127,7 +95,7 @@
                             <div class="modal-body">Are you sure you want delete it?</div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">No</button>
-                                <a class="btn btn-primary" href="/goods/delete/${data.barcode}">Yes</a>
+                                <a class="btn btn-primary" href="/units/delete/${data.unit}">Yes</a>
                             </div>
                         </div>
                     </div>
@@ -136,4 +104,4 @@
                 }
             </script>
             <!-- /.container-fluid -->
-            <%- include('./partials/footer') %>
+            <%- include('../partials/footer') %>

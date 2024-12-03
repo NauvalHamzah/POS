@@ -2,6 +2,14 @@ module.exports = function(db){
 
     const Supplier = require('../models/SupplierModel')(db)
 
+    function suppliers(req, res) {
+        res.render('suppliers/suppliers', {
+            activeRoute: 'suppliers',
+            title: 'POS - Suppliers',
+            activeUtil: '', user: req.session.user
+        })
+    }
+
     async function getSupplier(req, res) {
         try {
             let params = []
@@ -82,5 +90,5 @@ module.exports = function(db){
         })
     }
 
-return { getSupplier, addSupplier, saveSupplier, removeSupplier, getEdit, updateSupplier }
+return { suppliers, getSupplier, addSupplier, saveSupplier, removeSupplier, getEdit, updateSupplier }
 }

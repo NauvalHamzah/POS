@@ -12,6 +12,7 @@ module.exports = function(db, io){
     const { isLoggedIn } = require('../helpers/util')(db)
 
     router.get('/goods', isLoggedIn, goods.getGoods);
+    router.get('/updateStock', isLoggedIn, goods.updateStock);
     router.get('/units', isLoggedIn, unit.getUnit);
     router.get('/suppliers', isLoggedIn, supplier.getSupplier);
     router.get('/customers', isLoggedIn, customer.getCustomer);

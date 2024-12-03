@@ -5,6 +5,14 @@ module.exports = function(db, io){
     const multer = require('multer');
     const path = require('path')
 
+    function goods(req, res) {
+        res.render('goods/goods', {
+            activeRoute: 'goodsUtility',
+            title: 'POS - Goods',
+            activeUtil: 'goods',
+            user: req.session.user
+        })
+    }
 
     async function getGoods(req, res) {
         try {
@@ -114,5 +122,15 @@ module.exports = function(db, io){
         }
     }
 
-return { getGoods, addGoods, saveGoods, removeGoods, getEdit, updateGoods, checkStock }
+    async function updateStock(req, res) {
+        try {
+            const goods = await Goods.getGoods();
+            res.json({ goods });
+        } catch (error) {
+            console.error('Error updating goods:', error);
+            res.status(500).json({ error: 'Failed to fetch goods data' });
+        }
+    }
+
+return { goods, getGoods, addGoods, saveGoods, removeGoods, getEdit, updateGoods, checkStock, updateStock }
 }

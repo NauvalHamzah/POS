@@ -1,6 +1,6 @@
-<%- include('./partials/header') %>
-    <%- include('./partials/sidebar') %>
-        <%- include('./partials/topbar') %>
+<%- include('../partials/header') %>
+    <%- include('../partials/sidebar') %>
+        <%- include('../partials/topbar') %>
             <!-- Begin Page Content -->
             <div class="container-fluid">
 
@@ -98,9 +98,10 @@
                 }
 
                 const operator = <%= JSON.stringify(user.id) %>;
+                const role = <%- JSON.stringify(user.role) %>;
 
                 function renderActionColumn(data, type, row) {
-                    const isOperator = data.operator === operator;
+                    const isOperator = data.operator === operator || role == "Admin";
 
                     return  `
                         <a href="/purchases/edit/${data.invoice}" class="btn btn-success btn-circle ${!isOperator ? 'disabled' : ''}" 
@@ -134,4 +135,4 @@
                 }
             </script>
             <!-- /.container-fluid -->
-            <%- include('./partials/footer') %>
+            <%- include('../partials/footer') %>

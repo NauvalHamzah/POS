@@ -2,6 +2,16 @@ module.exports = function(db){
 
 const Unit = require('../models/UnitModel')(db)
 
+function units(req, res) {
+    res.render('units/units', {
+        activeRoute: 'goodsUtility',
+        title: 'POS - Units',
+        activeUtil: 'units',
+        user: req.session.user
+    })
+
+}
+
 async function getUnit(req, res) {
     try {
         let params = []
@@ -82,5 +92,5 @@ function updateUnit(req, res) {
     })
 }
 
-return { getUnit, addUnit, saveUnit, removeUnit, getEdit, updateUnit }
+return { units, getUnit, addUnit, saveUnit, removeUnit, getEdit, updateUnit }
 }

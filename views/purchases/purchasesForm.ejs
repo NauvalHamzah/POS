@@ -155,6 +155,7 @@
                 function fetchPurchasedItems(invoiceId) {
                     $.get(`/purchases/showPurchaseItem/${invoiceId}`, function(data) {
                         const purchasedItems = data;
+                        console.log(purchasedItems)
                         purchasedItemsTable(purchasedItems);  
                         updateTotalSummary(purchasedItems);  
                     })
@@ -162,6 +163,32 @@
                         console.log('Error fetching purchased items:', err);
                     });
                 }
+
+                 //Update goods stock
+                function fetchGoods() {
+                    $.get('/api/updateStock', function (data) {
+                        console.log(data);
+                        const selectElement = $('#barcode');
+
+                        // Clear the current options
+                        selectElement.empty();
+
+                        // Populate with new data
+                        data.goods.forEach(function (barc) {
+                            selectElement.append(`
+                                            <option value="${barc.barcode}" data-name="${barc.name}"
+                                                data-stock="${barc.stock}" data-purchaseprice="${barc.purchaseprice}">
+                                                ${barc.barcode} - ${barc.name}
+                                            </option>
+                                            `);
+                        });
+                        selectElement.trigger('change');
+                    })
+                        .fail(function (err) {
+                            console.log('Error fetching goods', err);
+                        });
+                }
+
 
                 //Goods Selection
                 $('#barcode').on('change', function () {
@@ -179,45 +206,47 @@
                 //Quantity input
                 $('#qty').on('input change',
                     function () {
-                        const
-                        purchasePrice = $('#barcode').find('option:selected').data('purchaseprice');
+                        const purchasePrice = $('#barcode').find('option:selected').data('purchaseprice');
                         const totalPrice = formatCurrency($(this).val() * purchasePrice);
                         $('#totalPrice').val(totalPrice);
-                    });
+                });
                 
+                //Add Item to purchase
+                $('#addPurchaseItem').on('click', function (e) {
+                    e.preventDefault(); 
+                    const invoice = $('#invoice').val(); 
+                    const barcode = $('#barcode').val(); 
+                    const qty = $('#qty').val(); 
+                    const purchasePrice = $('#purchasePrice').val(); 
+                    const data = {
+                                invoice: invoice, 
+                                barcode: barcode, 
+                                qty: qty, 
+                                purchasePrice: purchasePrice
+                            };
+                    $.ajax({
+                        url: '/purchases/addPurchaseItem', 
+                        type: 'POST', 
+                        data: JSON.stringify(data), 
+                        contentType: 'application/json', 
+                        success:
+                            function (response) {
+                                if (response.success) {
+                                    fetchGoods();
+                                    purchasedItemsTable(response.purchasedItems);
+                                    updateTotalSummary(response.purchasedItems);
+                                    $('#qty').val('');
+                                    $('#barcode').prop('selectedIndex', 0).trigger('change');
 
-                    $('#addPurchaseItem').on('click', function (e) {
-                        e.preventDefault(); 
-                        const invoice = $('#invoice').val(); 
-                        const barcode = $('#barcode').val(); 
-                        const qty = $('#qty').val(); 
-                        const purchasePrice = $('#purchasePrice').val(); 
-                        const data = {
-                                    invoice: invoice, 
-                                    barcode: barcode, 
-                                    qty: qty, 
-                                    purchasePrice: purchasePrice
-                                };
-                        $.ajax({
-                            url: '/purchases/addPurchaseItem', 
-                            type: 'POST', 
-                            data: JSON.stringify(data), 
-                            contentType: 'application/json', 
-                            success:
-                                function (response) {
-                                    if (response.success) {
-                                        purchasedItemsTable(response.purchasedItems);
-                                        updateTotalSummary(response.purchasedItems);
-                                        $('#qty').val('');
-                                        $('#barcode').prop('selectedIndex', 0).trigger('change');
-                                    } else {
-                                        console.log('Failed to add item:', response.message);
-                                    }
-                                }, 
-                            error:
-                                function (error) { console.log(error); }
-                        });
+                                    
+                                } else {
+                                    console.log('Failed to add item:', response.message);
+                                }
+                            }, 
+                        error:
+                            function (error) { console.log(error); }
                     });
+                });
                 
                 function purchasedItemsTable(purchasedItems) {
                     $('#purchasedItemsTableBody').empty(); 
@@ -292,8 +321,10 @@
                             const modalInstance = bootstrap.Modal.getInstance(modalElement[0]);
                             modalInstance.hide();
                             
+                            fetchGoods()
                             const invoiceId = '<%= inv.invoice %>'
                             fetchPurchasedItems(invoiceId);
+                            $('#barcode').prop('selectedIndex', 0).trigger('change');
                             
                         },
                         error: function(err) {

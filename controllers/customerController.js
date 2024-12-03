@@ -2,6 +2,15 @@ module.exports = function(db){
 
     const Customer = require('../models/CustomerModel')(db)
 
+    function customers(req, res) {
+        res.render('customers/customers', {
+            activeRoute: 'customers',
+            title: 'POS - Customers',
+            activeUtil: '',
+            user: req.session.user
+        })
+    }
+
     async function getCustomer(req, res) {
         try {
             let params = []
@@ -83,5 +92,5 @@ module.exports = function(db){
         })
     }
 
-return { getCustomer, addCustomer, saveCustomer, removeCustomer, getEdit, updateCustomer }
+return { customers, getCustomer, addCustomer, saveCustomer, removeCustomer, getEdit, updateCustomer }
 }

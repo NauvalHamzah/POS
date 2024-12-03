@@ -4,6 +4,15 @@ module.exports = function(db, io){
     const Goods = require('../models/GoodsModel')(db)
     const Customer = require('../models/CustomerModel')(db)
 
+    function sales(req, res) {
+        res.render('sales/sales', {
+            activeRoute: 'sales',
+            title: 'POS - Sales',
+            activeUtil: '',
+            user: req.session.user
+        })
+    }
+
     async function getSale(req, res) {
         try {
             let params = []
@@ -127,11 +136,13 @@ module.exports = function(db, io){
             const result = await db.query('SELECT * FROM goods WHERE stock < 6');
             if (result.rows.length > 0) {
                 io.emit('lowStock', result.rows); // Emit notification
+            } else {
+                io.emit('lowStock', result.rows)
             }
         } catch (err) {
             console.error('Error checking stock:', err);
         }
     }
 
-return { getSale, addSale, removeSale, removeSaleItem, getEdit, updateSale, showSaleItem, addSaleItem }
+return { sales, getSale, addSale, removeSale, removeSaleItem, getEdit, updateSale, showSaleItem, addSaleItem }
 }

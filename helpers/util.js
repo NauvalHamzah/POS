@@ -20,8 +20,9 @@ module.exports = function(db) {
     function isOperatorPurchase(req, res, next){
         invoice = req.params.id
         operator = req.session.user.id
+        role = req.session.user.role
         Purchase.getEdit(invoice, function(item){
-            if(item.operator==operator){
+            if(item.operator==operator || role=="Admin"){
                 return next()
             } else{
                 res.redirect('/purchases')
@@ -32,8 +33,9 @@ module.exports = function(db) {
     function isOperatorSale(req, res, next){
         invoice = req.params.id
         operator = req.session.user.id
+        role = req.session.user.role
         Sale.getEdit(invoice, function(item){
-            if(item.operator==operator){
+            if(item.operator==operator || role=="Admin"){
                 return next()
             } else{
                 res.redirect('/sales')

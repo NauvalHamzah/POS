@@ -4,6 +4,15 @@ module.exports = function(db){
     const bcrypt = require('bcrypt');
     const saltRounds = 10;
 
+    function users(req, res) {
+        res.render('users/users', {
+            activeRoute: 'users',
+            title: 'POS - Users',
+            activeUtil: '',
+            user: req.session.user
+        })
+    }
+
     async function getUser(req, res) {
         try {
             let params = []
@@ -146,5 +155,5 @@ module.exports = function(db){
         
     }
 
-return { getUser, addUser, saveUser, removeUser, getEdit, updateUser, getProfile, updateProfile, getChangePassword, updateChangePassword }
+return { users, getUser, addUser, saveUser, removeUser, getEdit, updateUser, getProfile, updateProfile, getChangePassword, updateChangePassword }
 }
